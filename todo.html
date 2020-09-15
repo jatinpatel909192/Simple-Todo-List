@@ -1,0 +1,98 @@
+<html>
+
+<head>
+    <title>
+        To Do List
+    </title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        var todos = [];
+        var totalRecord = 0;
+        var taskId = 0;
+
+        function getTask() {
+            document.getElementById("taskRecord").innerHTML = "";
+            todos = JSON.parse(localStorage.getItem("ToDo"));
+            totalRecord = todos.length;
+
+            for (let i = 0; i < totalRecord; i++) {
+                if (todos[i].status == true) {
+                    var checkInput = '<input class="checkTask" type="checkbox" onclick="checkTask(this,' + todos[i].id + ')" title="Task is Finished" checked>'
+                } else {
+                    var checkInput = '<input class="checkTask" type="checkbox" onclick="checkTask(this,' + todos[i].id + ')" title="Task in Progerss">'
+                }
+
+                document.getElementById("taskRecord").innerHTML +=
+                    '<tr><td class="task">' +
+                    todos[i].task +
+                    '</td><td><button class="removeBtn" title="Remove this task" onclick="removeTask(' +
+                    todos[i].id + ')">X</button></td><td>' + checkInput + '</td>'
+
+            }
+        }
+
+        function formSubmit() {
+            if (totalRecord > 0) {
+                taskId = todos[totalRecord - 1].id + 1;
+            } else {
+                taskId = 1;
+            }
+            todos.push({
+                "id": taskId,
+                "task": document.forms["todosForm"]["txtTask"].value,
+                "status": false
+            });
+            localStorage.setItem("ToDo", JSON.stringify(todos));
+            getTask();
+        }
+
+        function removeTask(hello) {
+            let todo = [];
+            for (let i = 0; i < totalRecord; i++) {
+                if (todos[i].id != hello) {
+                    todo.push(todos[i]);
+                }
+            }
+            todos = todo;
+            localStorage.setItem("ToDo", JSON.stringify(todos));
+            getTask();
+        }
+
+        function checkTask(taskStatus, sid) {
+            let todo = [];
+            for (let i = 0; i < totalRecord; i++) {
+                if (todos[i].id == sid) {
+                    todos[i].status = taskStatus.checked;
+                    todo.push(todos[i]);
+                } else {
+                    todo.push(todos[i]);
+                }
+            }
+            todos = todo;
+            // console.log(todos);
+            localStorage.setItem("ToDo", JSON.stringify(todos));
+            getTask();
+        }
+    </script>
+</head>
+
+<body onload=getTask()>
+    <div>
+        <div style="text-align: center">
+            <H1>TO-DO LIST</H1>
+            <form name="todosForm" onsubmit="formSubmit()" method="POST" action="#">
+                <input class="inputF" type="text" name="txtTask" placeholder="Add New Task" required>
+                <button class="btn" type="submit">Submit</button>
+            </form>
+        </div>
+        <div>
+            <table class="taskRecord">
+                <tbody id="taskRecord">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

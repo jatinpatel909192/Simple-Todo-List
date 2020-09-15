@@ -1,0 +1,44 @@
+.btn {
+    height: 40px;
+    background-color: lightseagreen;
+    font-weight: 700;
+    font-size: 20px;
+    border-color: skyblue;
+    position: absolute;
+    margin-top: 20px;
+}
+
+.inputF {
+    height: 40px;
+    width: 300px;
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+.task {
+    height: 40px;
+    font-size: 20px;
+    margin-top: 20px;
+    min-width: 300px;
+    border-bottom: 1px solid lightgray;
+}
+
+.taskRecord {
+    margin: auto;
+}
+
+.removeBtn {
+    background-color: red;
+    border: none;
+    height: 30px;
+    width: 30px;
+    font-size: 20px;
+    border-radius: 10px;
+    color: white;
+    font-weight: 700;
+}
+
+.checkTask {
+    height: 20px;
+    width: 20px;
+}
