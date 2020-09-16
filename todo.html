@@ -6,33 +6,53 @@
     </title>
     <link rel="stylesheet" href="style.css">
     <script>
-        var todos = [];
-        var totalRecord = 0;
-        var taskId = 0;
+        var todos = []; //Get Records from Local storage
+        var totalRecord = 0; //No. of Records
+        var taskId = 0; //Set Id to New Task
+        var todosList = []; //Display Selected Records on Screen bashed on Filter
 
+
+        //Filter Record to Display on Screen (By default show all Records otherwise Complate/Incomplate Task)
+        function taskFilter() {
+            todos = JSON.parse(localStorage.getItem("ToDo")) || [];
+            let selectedStatus = document.getElementById("selectTask").value;
+
+            if (selectedStatus == "all") {
+                todosList = todos;
+            } else {
+                todosList = todos.filter(function(a) {
+                    if (a.status == JSON.parse(document.getElementById("selectTask").value)) {
+                        return (a);
+                    }
+                });
+            }
+        }
+
+
+        //Display Records on Screen
         function getTask() {
             document.getElementById("taskRecord").innerHTML = "";
-            todos = JSON.parse(localStorage.getItem("ToDo")) || [];
-
-            if (todos != null) {
-                totalRecord = todos.length;
+            taskFilter();
+            if (todosList != null) {
+                totalRecord = todosList.length;
                 for (let i = totalRecord - 1; i >= 0; i--) {
-                    if (todos[i].status == true) {
-                        var checkInput = '<input class="checkTask" type="checkbox" onclick="checkTask(this,' + todos[i].id + ')" title="Task is Finished" checked>'
+                    if (todosList[i].status == true) {
+                        var checkInput = '<input class="checkTask" type="checkbox" onclick="checkTask(this,' + todosList[i].id + ')" title="Task is Finished" checked>'
                     } else {
-                        var checkInput = '<input class="checkTask" type="checkbox" onclick="checkTask(this,' + todos[i].id + ')" title="Task in Progerss">'
+                        var checkInput = '<input class="checkTask" type="checkbox" onclick="checkTask(this,' + todosList[i].id + ')" title="Task in Progerss">'
                     }
 
                     document.getElementById("taskRecord").innerHTML +=
                         '<tr><td class="task">' +
-                        todos[i].task +
+                        todosList[i].task +
                         '</td><td><button class="removeBtn" title="Remove this task" onclick="removeTask(' +
-                        todos[i].id + ')">X</button></td><td>' + checkInput + '</td>'
+                        todosList[i].id + ')">X</button></td><td>' + checkInput + '</td>'
                 }
 
             }
         }
 
+        //Save Task
         function formSubmit() {
             if (totalRecord > 0) {
                 taskId = todos[totalRecord - 1].id + 1;
@@ -48,6 +68,7 @@
             getTask();
         }
 
+        //Remove Task
         function removeTask(hello) {
             let todo = [];
             for (let i = 0; i < totalRecord; i++) {
@@ -60,16 +81,22 @@
             getTask();
         }
 
+
+        //Checkbox Change the Task Status
         function checkTask(taskStatus, sid) {
             let todo = [];
-            for (let i = 0; i < totalRecord; i++) {
+
+            for (let i = 0; i < todos.length; i++) {
                 if (todos[i].id == sid) {
                     todos[i].status = taskStatus.checked;
                     todo.push(todos[i]);
                 } else {
                     todo.push(todos[i]);
+
                 }
             }
+            console.log(todo);
+
             todos = todo;
             localStorage.setItem("ToDo", JSON.stringify(todos));
             getTask();
@@ -89,7 +116,11 @@
         <div>
             <table class="taskRecord">
                 <tbody id="taskRecord">
-
+                    <select id="selectTask" onchange="getTask()">
+                        <option value="all">All</option>
+                        <option value="true">Completed</option>
+                        <option value="false">Incompleted</option>
+                    </select>
                 </tbody>
             </table>
         </div>
