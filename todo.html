@@ -12,21 +12,23 @@
 
         function getTask() {
             document.getElementById("taskRecord").innerHTML = "";
-            todos = JSON.parse(localStorage.getItem("ToDo"));
-            totalRecord = todos.length;
+            todos = JSON.parse(localStorage.getItem("ToDo")) || [];
 
-            for (let i = 0; i < totalRecord; i++) {
-                if (todos[i].status == true) {
-                    var checkInput = '<input class="checkTask" type="checkbox" onclick="checkTask(this,' + todos[i].id + ')" title="Task is Finished" checked>'
-                } else {
-                    var checkInput = '<input class="checkTask" type="checkbox" onclick="checkTask(this,' + todos[i].id + ')" title="Task in Progerss">'
+            if (todos != null) {
+                totalRecord = todos.length;
+                for (let i = totalRecord - 1; i >= 0; i--) {
+                    if (todos[i].status == true) {
+                        var checkInput = '<input class="checkTask" type="checkbox" onclick="checkTask(this,' + todos[i].id + ')" title="Task is Finished" checked>'
+                    } else {
+                        var checkInput = '<input class="checkTask" type="checkbox" onclick="checkTask(this,' + todos[i].id + ')" title="Task in Progerss">'
+                    }
+
+                    document.getElementById("taskRecord").innerHTML +=
+                        '<tr><td class="task">' +
+                        todos[i].task +
+                        '</td><td><button class="removeBtn" title="Remove this task" onclick="removeTask(' +
+                        todos[i].id + ')">X</button></td><td>' + checkInput + '</td>'
                 }
-
-                document.getElementById("taskRecord").innerHTML +=
-                    '<tr><td class="task">' +
-                    todos[i].task +
-                    '</td><td><button class="removeBtn" title="Remove this task" onclick="removeTask(' +
-                    todos[i].id + ')">X</button></td><td>' + checkInput + '</td>'
 
             }
         }
@@ -69,7 +71,6 @@
                 }
             }
             todos = todo;
-            // console.log(todos);
             localStorage.setItem("ToDo", JSON.stringify(todos));
             getTask();
         }
